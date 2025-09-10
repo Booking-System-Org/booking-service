@@ -21,7 +21,7 @@ export class BookingEventHandlers {
       const bookingCreatedEvent = parseAndValidateEvent(payload.value, BookingCreatedEventDto);
 
       this.logger.debug(`Received message from topic [${topic}] partition [${partition}] offset [${offset}]`);
-      await this.bookingService.checkBooking(bookingCreatedEvent.data);
+      await this.bookingService.handleBooking(bookingCreatedEvent.data);
       await context.getConsumer().commitOffsets([{ topic, partition, offset: (parseInt(offset) + 1).toString() }]);
     } catch (error) {
       this.logger.error(`Error processing notification for order ${JSON.stringify(payload)}: ${error.message}`);

@@ -11,8 +11,9 @@ export class BookingService {
     this.logger = new Logger(BookingService.name);
   }
 
-  async checkBooking(data: BookingCreatedEventDataDto): Promise<void> {
+  async handleBooking(data: BookingCreatedEventDataDto): Promise<void> {
     try {
+      // Update booking status to CHECKING_AVAILABILITY
       const updatedBookingResult = await this.bookingRepository.update(data.id, {
         status: BookingStatus.CHECKING_AVAILABILITY,
       });
@@ -20,7 +21,8 @@ export class BookingService {
         return;
       }
 
-      const checkIsAvailable = await this.bookingRepository.findOne({
+      // Check if the same time booking is already exists
+      const checkIsSameTimeBookingExists = await this.bookingRepository.findOne({
         where: {
           restaurantId: data.restaurantId,
           bookingDate: data.bookingDate,
@@ -28,11 +30,13 @@ export class BookingService {
           id: Not(data.id),
         },
       });
-      if (!checkIsAvailable) {
+      if (!checkIsSameTimeBookingExists) {
+        // Update booking status from CHECKING_AVAILABILITY to CONFIRMED if the booking is not exists
         await this.bookingRepository.update(data.id, { status: BookingStatus.CONFIRMED });
         return;
       }
 
+      // Update booking status from CHECKING_AVAILABILITY to REJECTED if the booking is already exists
       await this.bookingRepository.update(data.id, { status: BookingStatus.REJECTED });
     } catch (error) {
       this.logger.error(error.message);
