@@ -7,7 +7,6 @@ import kafkaConfig from './config/kafka.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { BookingModule } from './modules/booking/booking.module';
-import { KafkaModule } from './infra/kafka';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { KafkaModule } from './infra/kafka';
         return dbConfig;
       },
     }),
-    KafkaModule,
     BookingModule,
   ],
   controllers: [AppController],
