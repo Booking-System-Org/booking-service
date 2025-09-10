@@ -11,11 +11,11 @@ provision: env-setup build install start
 
 env-setup:
 	@if [ ! -f .env ]; then \
-		echo "Создание .env файла из env.example..."; \
+		echo "Creating .env file from env.example..."; \
 		cp env.example .env; \
-		echo ".env файл создан! Измените переменные если необходимо."; \
+		echo ".env file created! Change variables if necessary."; \
 	else \
-		echo ".env файл уже существует."; \
+		echo ".env file already exists."; \
 	fi
 
 start:
@@ -31,3 +31,15 @@ clean:
 	$(DOCKER_COMPOSE) down -v
 install:
 	$(DOCKER_COMPOSE_RUN) booking-service npm install
+
+test-unit:
+	NODE_ENV=test $(DOCKER_COMPOSE_RUN) booking-service npm run test -- --forceExit --detectOpenHandles
+
+test-e2e:
+	@if [ -z "$(file)" ]; then \
+		NODE_ENV=test $(DOCKER_COMPOSE_RUN) booking-service npm run test:e2e -- --forceExit --detectOpenHandles; \
+	else \
+		NODE_ENV=test $(DOCKER_COMPOSE_RUN) booking-service npm run test:e2e -- $(file) --forceExit --detectOpenHandles; \
+	fi
+
+test: test-unit test-e2e
