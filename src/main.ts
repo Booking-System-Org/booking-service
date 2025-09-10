@@ -20,7 +20,7 @@ async function bootstrap() {
         },
       },
       consumer: {
-        groupId: 'booking-consumer-group-server',
+        groupId: process.env.KAFKA_CONSUMER_GROUP_ID || 'booking-consumer-group-server',
         allowAutoTopicCreation: true,
         sessionTimeout: 30000,
         rebalanceTimeout: 60000,
