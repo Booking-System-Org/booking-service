@@ -1,0 +1,22 @@
+services:
+  booking-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: booking-service
+    restart: on-failure
+    command: npm run start
+    volumes:
+      - .:/home/node
+      - node_modules:/home/node/node_modules
+    networks:
+      - booking-network
+
+networks:
+  booking-network:
+    name: booking-network
+    driver: bridge
+    external: true
+
+volumes:
+  node_modules:
