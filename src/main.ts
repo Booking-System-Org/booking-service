@@ -11,7 +11,11 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
-        brokers: ['kafka:9092'],
+        brokers: process.env.KAFKA_BROKERS
+          ? process.env.KAFKA_BROKERS.split(',')
+              .map(b => b.trim())
+              .filter(Boolean)
+          : ['kafka:9092'],
         retry: {
           initialRetryTime: 1000,
           retries: 3,

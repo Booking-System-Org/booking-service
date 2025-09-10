@@ -3,6 +3,7 @@ import { EventPattern, Payload, Ctx, KafkaContext } from '@nestjs/microservices'
 import { BookingCreatedEventDto } from './dtos';
 import { BookingService } from './booking.service';
 import { parseAndValidateEvent } from 'src/common/helpers';
+import { KafkaTopics } from 'src/infra/kafka/constants';
 
 @Controller()
 export class BookingEventHandlers {
@@ -11,7 +12,7 @@ export class BookingEventHandlers {
     this.logger = new Logger(BookingEventHandlers.name);
   }
 
-  @EventPattern('booking-events')
+  @EventPattern(KafkaTopics.bookingCreated)
   async handleBookingCreated(@Payload() payload: any, @Ctx() context: KafkaContext) {
     try {
       const { offset } = context.getMessage();
