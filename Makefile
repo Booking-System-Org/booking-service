@@ -6,7 +6,7 @@ RUN := run --rm
 DOCKER_COMPOSE := docker-compose -f $(COMPOSE_FILE) --project-name $(PROJECT_NAME)
 DOCKER_COMPOSE_RUN := $(DOCKER_COMPOSE) $(RUN)
 
-.PHONY: start stop restart build install provision env-setup
+.PHONY: start stop restart build install provision env-setup test-unit test-e2e test
 provision: env-setup build install start
 
 env-setup:
